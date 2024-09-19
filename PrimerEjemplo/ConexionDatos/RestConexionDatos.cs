@@ -25,17 +25,50 @@ namespace PrimerEjemplo.ConexionDatos
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
         }
-        public Task AddPlatoAsync(Plato plato)
+        public async Task AddPlatoAsync(Plato plato)
         {
-            throw new NotImplementedException();
+            if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+            {
+                Debug.WriteLine("[RED] Sin acceso a internet.");
+                return;
+            }
+            try {
+                //Serializamos plato a pasar
+                string platoSer = JsonSerializer.Serialize<Plato>(plato, opcionesJson);
+                StringContent contenido = new StringContent(platoSer,Encoding.UTF8,"application/json");
+                HttpResponseMessage response = await httpClient.PostAsync($"{url}/plato",contenido);
+                if(response.IsSuccessStatusCode)
+                    Debug.WriteLine("[RED] Se registró correctamente.");
+                else
+                    Debug.WriteLine("[RED] NO se registró correctamente.");
+            }
+            catch (Exception e) {
+                Debug.WriteLine($"[ERROR] {e.Message}");
+            }
         }
 
-        public Task DeletePlatoAsync(int id)
+        public async Task DeletePlatoAsync(int id)
         {
-            throw new NotImplementedException();
+            if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+            {
+                Debug.WriteLine("[RED] Sin acceso a internet.");
+                return;
+            }
+            try
+            {
+                HttpResponseMessage response = await httpClient.DeleteAsync($"{url}/plato/{id}");
+                if (response.IsSuccessStatusCode)
+                    Debug.WriteLine("[RED] Se eliminó correctamente.");
+                else
+                    Debug.WriteLine("[RED] NO se eliminó correctamente.");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"[ERROR] {e.Message}");
+            }
         }
 
-        public Task<List<Plato>> GetPlatosAsync()
+        public async Task<List<Plato>> GetPlatosAsync()
         {
             List<Plato> platos = new List<Plato>();
             if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
@@ -43,11 +76,45 @@ namespace PrimerEjemplo.ConexionDatos
                 Debug.WriteLine("[RED] Sin acceso a internet.");
                 return platos;
             }
+            try {
+                HttpResponseMessage response = await httpClient.GetAsync($"{url}/plato");
+                if (response.IsSuccessStatusCode) {
+                    //Deserializamos
+                    var contenido = await response.Content.ReadAsStringAsync();
+                    platos = JsonSerializer.Deserialize<List<Plato>>(contenido, opcionesJson);
+                }
+                else {
+                    Debug.WriteLine("[RED] Sin respuesta favorable desde el servidor API.");
+                }
+            }
+            catch (Exception e) {
+                Debug.WriteLine($"[ERROR] {e.Message}");
+            }
+            return platos;
         }
 
-        public Task UpdatePlatoAsync(Plato plato)
+        public async Task UpdatePlatoAsync(Plato plato)
         {
-            throw new NotImplementedException();
+            if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+            {
+                Debug.WriteLine("[RED] Sin acceso a internet.");
+                return;
+            }
+            try
+            {
+                //Serializamos plato a pasar
+                string platoSer = JsonSerializer.Serialize<Plato>(plato, opcionesJson);
+                StringContent contenido = new StringContent(platoSer, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await httpClient.PutAsync($"{url}/plato/{plato.Id}", contenido);
+                if (response.IsSuccessStatusCode)
+                    Debug.WriteLine("[RED] Se modificó correctamente.");
+                else
+                    Debug.WriteLine("[RED] NO se modificó correctamente.");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"[ERROR] {e.Message}");
+            }
         }
     }
 }

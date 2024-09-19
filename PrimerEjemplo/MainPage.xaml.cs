@@ -1,24 +1,32 @@
-﻿namespace PrimerEjemplo
+﻿using PrimerEjemplo.ConexionDatos;
+using System.Diagnostics;
+
+namespace PrimerEjemplo
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private readonly IRestConexionDatos conexionDatos;
 
-        public MainPage()
+        public MainPage(IRestConexionDatos conexionDatos)
         {
             InitializeComponent();
+            this.conexionDatos = conexionDatos;
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        protected async override void OnAppearing() { 
+            base.OnAppearing();
+            coleccionPlatosView.ItemsSource = await conexionDatos.GetPlatosAsync();
+        }
+
+        //Evento Add
+        async void OnAddPlatoClic(object sender, EventArgs e) {
+            Debug.WriteLine("[EVENTO] Botón AddPlato clickeado");
+        }
+
+        //Evento clic a un plato de la lista
+        async void OnelementoCambiado(object sender, SelectionChangedEventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            Debug.WriteLine("[EVENTO] Botón ElementoCambiado clickeado");
         }
     }
 
