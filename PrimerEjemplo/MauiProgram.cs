@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using PrimerEjemplo.ConexionDatos;
+using PrimerEjemplo.Pages;
 
 namespace PrimerEjemplo
 {
@@ -17,8 +18,9 @@ namespace PrimerEjemplo
                 });
             builder.Services.AddSingleton<IRestConexionDatos, RestConexionDatos>();
             builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddTransient<GestionPlatosPage>();
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
