@@ -15,9 +15,10 @@ namespace PrimerEjemplo.ConexionDatos
         private readonly string dominio;
         private readonly string url;
         private readonly JsonSerializerOptions opcionesJson;
-        public RestConexionDatos()
+        public RestConexionDatos(HttpClient httpClient)
         {
-            httpClient = new HttpClient();
+            //httpClient = new HttpClient();
+            this.httpClient = httpClient;
             //dominio = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:7169" : "https://localhost:7169";
             dominio = "https://localhost:7169";
             url = $"{dominio}/api";
