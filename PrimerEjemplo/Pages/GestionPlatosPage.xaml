@@ -8,6 +8,19 @@
             <Setter Property="Margin" Value="0,5,0,5"/>
         </Style>
     </ContentPage.Resources>
+    <Grid RowDefinitions="*,auto" ColumnDefinitions="*,*,*">
+        <TableView Intent="Data" Grid.Row="0" Grid.ColumnSpan="3">
+            <TableRoot>
+                <TableSection Title="Acciones a realizar">
+                    <EntryCell Placeholder="Introduzca el nombre del plato" Text="{Binding Path=plato.Nombre}"/>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+        <Button Text="Eliminar" Clicked="OnEliminarClic" Grid.Row="1" Grid.Column="0" Margin="20,5"/>
+        <Button Text="Calcelar" Clicked="OnCancelClic" Grid.Row="1" Grid.Column="1" Margin="0,5"/>
+        <Button Text="Guardar" Clicked="OnGuardarClic" Grid.Row="1" Grid.Column="2" Margin="20,5"/>
+    </Grid>
+    <!--
     <VerticalStackLayout>
         <Label Text="Acciones a realizar"/>
         <Entry Placeholder="Introduzca el nombre del plato" Text="{Binding Path=plato.Nombre}"/>
@@ -15,4 +28,5 @@
         <Button Text="Calcelar" Clicked="OnCancelClic"/>
         <Button Text="Guardar" Clicked="OnGuardarClic"/>
     </VerticalStackLayout>
+    -->
 </ContentPage>
